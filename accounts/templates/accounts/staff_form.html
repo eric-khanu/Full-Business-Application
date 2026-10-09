@@ -1,0 +1,107 @@
+{% extends "base_app.html" %}
+
+{% block title %}{{ title }} · {{ current_business.name }}{% endblock %}
+
+{% block content %}
+
+<div class="mb-6">
+  <a href="{% url 'accounts:staff_list' %}"
+     class="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
+    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+    </svg>
+    Back to staff
+  </a>
+  <h1 class="mt-3 text-xl font-semibold text-slate-900 dark:text-slate-100">{{ title }}</h1>
+  {% if not staff %}
+    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+      A unique temporary password will be generated and shown once on the staff list.
+    </p>
+  {% endif %}
+</div>
+
+<form method="post" enctype="multipart/form-data" novalidate
+      data-guard-submit data-loading-text="Saving…"
+      class="mx-auto max-w-3xl space-y-6">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="flex items-start gap-3 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800
+                dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-300">
+      <svg class="mt-0.5 h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.7-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z"/>
+      </svg>
+      <div class="flex-1">
+        {% for err in form.non_field_errors %}<p>{{ err }}</p>{% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {# ---- Account ---- #}
+  <div class="card">
+    <div class="card-header">
+      <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Account</h2>
+      <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+        Login and role details.
+      </p>
+    </div>
+    <div class="card-body grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="sm:col-span-2">
+        {% include "partials/field.html" with field=form.username %}
+      </div>
+      {% include "partials/field.html" with field=form.first_name %}
+      {% include "partials/field.html" with field=form.last_name %}
+      <div class="sm:col-span-2">
+        {% include "partials/field.html" with field=form.email %}
+      </div>
+      {% include "partials/field.html" with field=form.role %}
+      {% include "partials/field.html" with field=form.hired_at %}
+      {% if form.employee_id %}
+        {% include "partials/field.html" with field=form.employee_id %}
+      {% endif %}
+      <div class="sm:col-span-2">
+        <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+          {{ form.is_active_staff }}
+          Active (can sign in)
+        </label>
+        {% for e in form.is_active_staff.errors %}
+          <p class="mt-1 text-xs text-red-600 dark:text-red-400">{{ e }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {# ---- Contact ---- #}
+  <div class="card">
+    <div class="card-header">
+      <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Contact</h2>
+      <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+        Optional. Shown on internal documents.
+      </p>
+    </div>
+    <div class="card-body grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {% include "partials/field.html" with field=form.phone1 %}
+      {% include "partials/field.html" with field=form.phone2 %}
+      <div class="sm:col-span-2">
+        {% include "partials/field.html" with field=form.address %}
+      </div>
+      <div class="sm:col-span-2">
+        {% include "partials/field.html" with field=form.profile_picture %}
+      </div>
+    </div>
+  </div>
+
+  {# ---- Actions ---- #}
+  <div class="flex items-center justify-end gap-3">
+    <a href="{% url 'accounts:staff_list' %}" class="btn-secondary">Cancel</a>
+    <button type="submit" class="btn-primary">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+      </svg>
+      {{ submit_label|default:"Save" }}
+    </button>
+  </div>
+</form>
+
+{% endblock %}

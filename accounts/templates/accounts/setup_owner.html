@@ -1,0 +1,92 @@
+{% extends "base_anon.html" %}
+{% load static %}
+
+{% block title %}Set up your business{% endblock %}
+
+{% block content %}
+<div class="mx-auto w-full max-w-lg">
+
+  {# Header #}
+  <div class="mb-8 text-center">
+    <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-brand-600 text-white shadow-sm">
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 9l1.5-5h15L21 9M3 9v10a1 1 0 001 1h16a1 1 0 001-1V9M3 9h18M9 21v-6h6v6"/>
+      </svg>
+    </div>
+    <h1 class="mt-5 text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+      Set up your business
+    </h1>
+    <p class="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
+      One-time setup. This page will be disabled afterward.
+    </p>
+  </div>
+
+  {# Form #}
+  <form method="post" novalidate class="space-y-6"
+        data-guard-submit data-loading-text="Creating…">
+    {% csrf_token %}
+
+    {# Non-field errors #}
+    {% if form.non_field_errors %}
+      <div class="flex items-start gap-3 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800
+                  dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-300">
+        <svg class="mt-0.5 h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.7-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z"/>
+        </svg>
+        <div class="flex-1">
+          {% for err in form.non_field_errors %}<p>{{ err }}</p>{% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {# ---- Section: Business ---- #}
+    <div class="card">
+      <div class="card-header">
+        <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Your business</h2>
+        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+          Shown on receipts and invoices.
+        </p>
+      </div>
+      <div class="card-body space-y-4">
+        {% include "partials/field.html" with field=form.business_name %}
+      </div>
+    </div>
+
+    {# ---- Section: Owner account ---- #}
+    <div class="card">
+      <div class="card-header">
+        <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Owner account</h2>
+        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+          You'll use these details to sign in.
+        </p>
+      </div>
+      <div class="card-body grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="sm:col-span-2">
+          {% include "partials/field.html" with field=form.username %}
+        </div>
+        <div class="sm:col-span-2">
+          {% include "partials/field.html" with field=form.email %}
+        </div>
+        {% include "partials/field.html" with field=form.first_name %}
+        {% include "partials/field.html" with field=form.last_name %}
+        {% include "partials/field.html" with field=form.password1 %}
+        {% include "partials/field.html" with field=form.password2 %}
+      </div>
+    </div>
+
+    {# ---- Submit ---- #}
+    <button type="submit" class="btn-primary w-full">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+      </svg>
+      Create business &amp; owner
+    </button>
+  </form>
+
+  <p class="mt-6 text-center text-xs text-slate-400 dark:text-slate-500">
+    &copy; {% now "Y" %} {{ current_business.name|default:"Business App" }}
+  </p>
+</div>
+{% endblock %}

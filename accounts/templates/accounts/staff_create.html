@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>New staff account</h1>
+<p>
+  This account will be created with the business default password.
+  The new user will be required to change it before accessing anything else.
+</p>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Create account</button>
+</form>
+{% endblock %}
