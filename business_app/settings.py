@@ -20,13 +20,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 env.read_env(BASE_DIR / ".env")
 
-
-
-print("BASE_DIR:", BASE_DIR)
-print("Looking for .env at:", BASE_DIR.parent / ".env")
-print("Exists:", (BASE_DIR.parent / ".env").exists())
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
